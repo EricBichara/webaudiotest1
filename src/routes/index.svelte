@@ -71,7 +71,7 @@
                     text = "Stop";
                 })
                 .catch((err) => {
-                    alert(`The following error occurred: ${err}`);
+                    alert(`The following error occurred2: ${err}`);
                 });
         } else {
             mediaRecorder.stop();
