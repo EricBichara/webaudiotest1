@@ -1,18 +1,20 @@
 <h1 class="text-4xl">Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<button class="btn btn-accent" on:click={startRecord}>{text}</button>
-
-{#if showAudio}
-    <audio controls src={audioURL}></audio>
-{/if}
-
+<div class="mt-4">Select Device</div>
 {#if devices.length > 0}
-    <select class="select">
+    <select class="select select-accent" bind:value={selectedDevice}>
         {#each devices as device}
             <option value={device.deviceId}>{device.kind} - {device.label}</option>
         {/each}
     </select>
 {/if}
+<div></div>
+<button class="btn btn-accent mt-4" on:click={startRecord}>{text}</button>
+
+{#if showAudio}
+    <audio controls src={audioURL}></audio>
+{/if}
+
 
 
 <script>
@@ -25,19 +27,25 @@
     let audioBlob = null;
     let text = "Start";
     let devices = [];
+    let selectedDevice = null;
 
     onMount(()=>{
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             alert('Your browser does not support recording!');
             return;
         }
-        navigator.mediaDevices.enumerateDevices().then(function (deviceList) {
-            devices = deviceList.filter((device) => device.kind === 'audioinput');
-            devices.forEach((device) => {
-                console.log(device.kind + ": " + device.label +
-                    " id = " + device.deviceId);
+
+        navigator.mediaDevices.getUserMedia({audio: true}).then(()=>{
+            navigator.mediaDevices.enumerateDevices().then(function (deviceList) {
+                devices = deviceList.filter((device) => device.kind === 'audioinput');
+                devices.forEach((device) => {
+                    console.log(device.kind + ": " + device.label +
+                        " id = " + device.deviceId);
+                })
             })
-        })
+        });
+
+
     })
 
     function mediaRecorderDataAvailable(e) {
