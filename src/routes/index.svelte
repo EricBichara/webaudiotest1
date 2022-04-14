@@ -44,8 +44,6 @@
                 })
             })
         });
-
-
     })
 
     function mediaRecorderDataAvailable(e) {
@@ -69,7 +67,7 @@
 
         if (!mediaRecorder) {
             navigator.mediaDevices.getUserMedia({
-                audio: true,
+                audio: {deviceId: selectedDevice},
             })
                 .then((stream) => {
                     mediaRecorder = new MediaRecorder(stream);
