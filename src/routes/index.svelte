@@ -1,6 +1,6 @@
-<h1>Welcome to SvelteKit</h1>
+<h1 class="text-4xl">Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<button on:click={startRecord}>{text}</button>
+<button class="btn btn-accent" on:click={startRecord}>{text}</button>
 {#if showAudio}
     <audio controls src="{audioURL}"></audio>
 {/if}
