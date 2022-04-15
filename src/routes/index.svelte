@@ -1,5 +1,4 @@
-<h1 class="text-4xl">Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1 class="text-2xl">Welcome to BAPP</h1>
 <div class="mt-4">Select Device</div>
 {#if devices.length > 0}
     <select class="select select-accent" bind:value={selectedDevice}>
@@ -9,7 +8,7 @@
     </select>
 {/if}
 <div></div>
-<button class="btn btn-accent mt-4" on:click={startRecord}>{text}</button>
+<button class="btn bg-error mt-4" on:click={startRecord}>{text}</button>
 
 {#if showAudio}
     <audio controls src={audioURL}></audio>
@@ -25,7 +24,7 @@
     let chunks = []; //will be used later to record audio
     let mediaRecorder = null; //will be used later to record audio
     let audioBlob = null;
-    let text = "Start";
+    let text = "Record";
     let devices = [];
     let selectedDevice = null;
 
@@ -81,7 +80,7 @@
                 });
         } else {
             mediaRecorder.stop();
-            text = "Start";
+            text = "Record";
         }
     }
 </script>
