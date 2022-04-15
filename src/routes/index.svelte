@@ -8,10 +8,10 @@
     </select>
 {/if}
 <div></div>
-<button class="btn bg-error mt-4" on:click={startRecord}>{text}</button>
+<button class="btn btn-error mt-4" on:click={startRecord}>{text}</button>
 
 {#if showAudio}
-    <audio controls src={audioURL}></audio>
+    <audio class="mt-4" controls src={audioURL}></audio>
 {/if}
 
 
