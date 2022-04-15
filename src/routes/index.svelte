@@ -51,7 +51,7 @@
     }
 
     function mediaRecorderStop() {
-        audioBlob = new Blob(chunks, {type: 'audio/mp3'});
+        audioBlob = new Blob(chunks, {type: 'audio/mp4'});
         audioURL = window.URL.createObjectURL(audioBlob);
         showAudio = true;
         // reset to default
