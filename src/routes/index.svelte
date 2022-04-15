@@ -1,14 +1,14 @@
-<h1 class="text-2xl">Welcome to BAPP</h1>
-<div class="mt-4">Select Device</div>
+<div>Audio Input Device</div>
 {#if devices.length > 0}
     <select class="select select-accent" bind:value={selectedDevice}>
+        <option value={null} disabled selected>Please choose an option</option>
         {#each devices as device}
-            <option value={device.deviceId}>{device.kind} - {device.label}</option>
+            <option value={device.deviceId}>{device.label}</option>
         {/each}
     </select>
 {/if}
 <div></div>
-<button class="btn btn-error mt-4" on:click={startRecord}>{text}</button>
+<button class="btn btn-error mt-4" on:click={startRecord} disabled={isBtnDisabled}>{text}</button>
 
 {#if showAudio}
     <audio class="mt-4" controls src={audioURL}></audio>
@@ -27,6 +27,8 @@
     let text = "Record";
     let devices = [];
     let selectedDevice = null;
+    $: isBtnDisabled = selectedDevice === null;
+
 
     onMount(()=>{
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
