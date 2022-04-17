@@ -1,22 +1,31 @@
 <script>
     import {onMount} from "svelte";
 
-    let bpm = 100;
-
     let frequency = 100;
+    let mixGainValue = 1;
 
     const audioContext = new AudioContext();
-    var gainOsc = audioContext.createGain();
-    var gainOsc2 = audioContext.createGain();
+    const gainOsc = audioContext.createGain();
+    const gainOsc2 = audioContext.createGain();
+    const mixGain = audioContext.createGain();
 
-    onMount(()=>{
-        gainOsc.connect(audioContext.destination);
-        gainOsc2.connect(audioContext.destination);
+    let osc = null;
+    let osc2;
+
+    onMount(() => {
+        mixGain.connect(audioContext.destination);
+        gainOsc.connect(mixGain);
+        gainOsc2.connect(mixGain);
     })
 
     function playKick() {
-        var osc = audioContext.createOscillator();
-        var osc2 = audioContext.createOscillator();
+        if (osc != null) {
+            osc.stop(audioContext.currentTime);
+            osc2.stop(audioContext.currentTime);
+        }
+
+        osc = audioContext.createOscillator();
+        osc2 = audioContext.createOscillator();
 
         osc.type = "triangle";
         osc2.type = "sine";
@@ -33,6 +42,8 @@
         osc2.frequency.setValueAtTime(frequency - 70, audioContext.currentTime);
         osc2.frequency.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
 
+        mixGain.gain.value = mixGainValue;
+
         osc.connect(gainOsc);
         osc2.connect(gainOsc2);
 
@@ -48,8 +59,8 @@
 
 <h1 class="text-3xl mb-4">Drum Machine</h1>
 
-<div>BPM {bpm}</div>
-<input type="range" min="40" max="260" bind:value={bpm} step="1" class="range">
+<div>Mix Gain {mixGainValue}</div>
+<input type="range" min="0" max="3" bind:value={mixGainValue} step=".1" class="range">
 
 
 <div class="mt-3">Kick</div>
