@@ -1,6 +1,6 @@
 <ul class="menu p-4 overflow-y-auto w-72 bg-base-300">
-    <li on:click={onClick}><a href="/drums">Drum Machine</a></li>
-    <li on:click={onClick}><a href="/recorder">Recorder</a></li>
+    <li on:click={onClick} class="mb-2"><a href="/drums">Drum Machine</a></li>
+    <li on:click={onClick} class="mb-2"><a href="/recorder">Recorder</a></li>
 </ul>
 
 <script>
@@ -12,13 +12,3 @@
         dispatch("message", {});
     }
 </script>
-
-<style>
-    @tailwind components;
-
-    @layer components {
-        li {
-            @apply mb-2;
-        }
-    }
-</style>
