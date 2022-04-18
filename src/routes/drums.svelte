@@ -100,7 +100,7 @@
     {#each grid as columm, c}
         <div class="grid gap-4 grid-flow-row" style="width: 50px">
             {#each columm as row, r}
-                <div class="bg-error border-solid border border-accent h-14" style="height: 50px" class:bg-error={row} on:click={()=>{togglePad(c,r)}}></div>
+                <div class="bg-error border-solid border-2 border-orange-600 h-14 rounded" style="height: 50px" class:bg-error={row} on:click={()=>{togglePad(c,r)}}></div>
             {/each}
         </div>
     {/each}
