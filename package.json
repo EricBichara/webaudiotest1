@@ -14,8 +14,8 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"autoprefixer": "^10.4.4",
-		"daisyui": "2.13.6",
-		"eslint": "^7.32.0",
+		"daisyui": "^2.14.1",
+		"eslint": "^8.13.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^3.2.1",
 		"postcss": "^8.4.12",
@@ -26,5 +26,8 @@
 		"svelte-preprocess": "^4.10.5",
 		"tailwindcss": "^3.0.23"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"tone": "^14.7.77"
+	}
 }

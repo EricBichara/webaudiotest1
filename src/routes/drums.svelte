@@ -1,6 +1,7 @@
 <script>
     import {onMount} from "svelte";
 
+
     let frequency = 100;
     let mixGainValue = 1;
     let bpm = 100;
@@ -111,7 +112,7 @@
         gainOsc3.gain.setValueAtTime(1, time);
         gainOsc3.gain.exponentialRampToValueAtTime(0.001, time + 1);
 
-        osc.frequency.setValueAtTime(frequency, time);
+        osc.frequency.setValueAtTime(350, time);
         osc.frequency.exponentialRampToValueAtTime(0.001, time + 1);
 
         osc.connect(gainOsc3);
@@ -159,7 +160,7 @@
             {#each row as column, r}
                 <div class="flex flex-row items-center justify-end">
                     {#if c === 0}
-                        <div class="mr-16">{gridLabel[r]}</div>
+                        <button class="mr-16 px-4 border-solid border-2 border-red-200 label-cell">{gridLabel[r]}</button>
                     {/if}
                     <div class="bg-error border-solid border-2 border-orange-600 h-14 rounded cell"
                          class:bg-error={column} on:click={()=>{togglePad(c,r)}}></div>
@@ -173,5 +174,11 @@
     .cell {
         height: 40px;
         width: 40px;
+    }
+
+    .label-cell {
+        height: 40px;
+        text-align: center;
+        line-height: 38px;
     }
 </style>
