@@ -19,13 +19,13 @@
             </svg>
         </label>
     </div>
-    <div class="flex-1 px-2 mx-2">Welcome to BAPP</div>
+    <div class="flex-1 px-2 mx-2">BAPP - The band's gonna make it</div>
 </div>
 
 <div class="drawer drawer-mobile">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" bind:checked={checked}>
     <div class="drawer-content">
-        <div class="p-4">
+        <div>
             <slot/>
         </div>
     </div>

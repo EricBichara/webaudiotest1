@@ -18,7 +18,8 @@
 {/each}
 
 
-<script>
+<script lang="ts">
+
     import {onMount} from "svelte";
 
     let audioURLList = [];
@@ -46,6 +47,10 @@
 
     function mediaRecorderDataAvailable(e) {
         chunks.push(e.data);
+    }
+
+    declare global {
+        interface Window { URL: unknown; }
     }
 
     function mediaRecorderStop() {
