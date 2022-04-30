@@ -1,21 +1,23 @@
-<h1 class="text-3xl mb-4">Audio Recorder</h1>
-<div>Audio Input Device</div>
-{#if devices.length > 0}
-    <select class="select select-accent" bind:value={selectedDevice}>
-        <option value={null} disabled selected>Please choose an option</option>
-        {#each devices as device}
-            <option value={device.deviceId}>{device.label}</option>
-        {/each}
-    </select>
-{/if}
-<div></div>
-<button class="btn btn-error mt-4" on:click={startRecord} disabled={isBtnDisabled}>{text}</button>
+<div class="p-4">
+    <h1 class="text-3xl mb-4">Audio Recorder</h1>
+    <div>Audio Input Device</div>
+    {#if devices.length > 0}
+        <select class="select select-accent" bind:value={selectedDevice}>
+            <option value={null} disabled selected>Please choose an option</option>
+            {#each devices as device}
+                <option value={device.deviceId}>{device.label}</option>
+            {/each}
+        </select>
+    {/if}
+    <div></div>
+    <button class="btn btn-error mt-4" on:click={startRecord} disabled={isBtnDisabled}>{text}</button>
 
 
-{#each audioURLList as audioURL, i}
-    <div class="mt-4">Recording {i + 1}</div>
-    <audio class="mt-1" controls src={audioURL}></audio>
-{/each}
+    {#each audioURLList as audioURL, i}
+        <div class="mt-4">Recording {i + 1}</div>
+        <audio class="mt-1" controls src={audioURL}></audio>
+    {/each}
+</div>
 
 
 <script lang="ts">
@@ -50,7 +52,9 @@
     }
 
     declare global {
-        interface Window { URL: unknown; }
+        interface Window {
+            URL: unknown;
+        }
     }
 
     function mediaRecorderStop() {

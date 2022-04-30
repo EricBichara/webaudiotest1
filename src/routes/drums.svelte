@@ -1,6 +1,8 @@
 <script lang="ts">
     import * as Tone from "tone";
     import {Loop, MembraneSynth} from "tone";
+    import KickParams from "../components/KickParams.svelte";
+    import SnareParams from "../components/SnareParams.svelte";
 
     let grid = [[true, false, false, false], [true, false, false, false], [true, false, false, false], [true, false, false, false], [true, false, false, false], [true, false, false, false], [true, false, false, false], [true, false, false, false]];
     let gridLabel = ['Kick', 'Snare', 'HighHat', 'Clap'];
@@ -13,6 +15,9 @@
     let highHat: MembraneSynth;
     let clap: MembraneSynth;
 
+    let isParamsOpen = false;
+    let currentParams;
+
     function start() {
         kick = new Tone.MembraneSynth().toDestination();
         snare = new Tone.MembraneSynth().toDestination();
@@ -20,14 +25,14 @@
         clap = new Tone.MembraneSynth().toDestination();
 
         loop = new Tone.Loop(triggerSounds, '4n');
+        Tone.Transport.timeSignature = [8, 4];
         Tone.Transport.start();
         loop.start(0);
-        // const synth = new Tone.MembraneSynth().toDestination();
-        // synth.triggerAttackRelease("C2", "8n");
     }
 
     function triggerSounds(time) {
         Tone.Transport.bpm.value = bpm;
+        beat = parseInt(Tone.Transport.position.split(':')[1]);
 
         if (grid[beat][0]) {
             playKick(time);
@@ -41,14 +46,10 @@
         if (grid[beat][3]) {
             playClap(time);
         }
-        if (beat === 7) {
-            beat = 0;
-        } else {
-            beat++;
-        }
     }
 
     function playKick(time) {
+        console.log(kick.envelope.attack)
         kick.triggerAttackRelease("C1", "8n", time);
     }
 
@@ -56,16 +57,18 @@
         snare.triggerAttackRelease("C2", "8n", time);
     }
 
-    function playHighHat(time){
+    function playHighHat(time) {
         highHat.triggerAttackRelease("C3", "8n", time);
     }
 
-    function playClap(time){
+    function playClap(time) {
         clap.triggerAttackRelease("C4", "8n", time);
     }
 
     function stop() {
+        Tone.Transport.stop();
         loop.stop();
+        beat = 0;
     }
 
     function togglePad(column, row) {
@@ -73,10 +76,15 @@
         grid = grid;
     }
 
+    function openParams(param) {
+        currentParams = param;
+        isParamsOpen = true;
+    }
+
 </script>
 
 <div class="drawer drawer-end">
-    <input id="param-drawer" type="checkbox" class="drawer-toggle">
+    <input id="param-drawer" type="checkbox" class="drawer-toggle" bind:checked={isParamsOpen}>
     <div class="drawer-content p-4">
         <h1 class="text-3xl mb-4">Drum Machine</h1>
 
@@ -87,16 +95,17 @@
         <button class="btn btn-primary" on:click={stop}>Stop</button>
 
         <div class="grid gap-4 grid-flow-col mt-4">
-            {#each grid as row, c}
+            {#each grid as column, ci}
                 <div class="grid gap-4 grid-flow-column ">
-                    {#each row as column, r}
+                    {#each column as row, ri}
                         <div class="flex flex-row items-center justify-end">
-                            {#if c === 0}
-                                <label for="param-drawer"
-                                       class="mr-16 px-4 border-solid border-2 border-red-200 label-cell">{gridLabel[r]}</label>
+                            {#if ci === 0}
+                                <button on:click={()=>{openParams(gridLabel[ri])}}
+                                        class="mr-16 px-4 border-solid border-2 border-red-200 label-cell">{gridLabel[ri]}</button>
                             {/if}
                             <div class="bg-error border-solid border-2 border-orange-600 h-14 rounded cell"
-                                 class:bg-error={column} on:click={()=>{togglePad(c,r)}}></div>
+                                 class:bg-error={row} class:border-orange-200={ci === beat}
+                                 on:click={()=>{togglePad(ci,ri)}}></div>
                         </div>
                     {/each}
                 </div>
@@ -105,12 +114,13 @@
     </div>
     <div class="drawer-side">
         <label for="param-drawer" class="drawer-overlay"></label>
-        <ul class="menu p-4 w-80 bg-base-100">
-            <!-- Sidebar content here -->
-            <li>Sidebar Item 1</li>
-            <li>Sidebar Item 2</li>
-
-        </ul>
+        <div class="menu p-4 w-80 bg-base-100">
+            {#if currentParams === gridLabel[0]}
+                <KickParams kick={kick}/>
+            {:else if currentParams === gridLabel[1]}
+                <SnareParams/>
+            {/if}
+        </div>
     </div>
 
 </div>
