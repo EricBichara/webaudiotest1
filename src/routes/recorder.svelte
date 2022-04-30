@@ -17,6 +17,12 @@
         <div class="mt-4">Recording {i + 1}</div>
         <audio class="mt-1" controls src={audioURL}></audio>
     {/each}
+
+    <ul>
+        {#each supportedAudios as type}
+            <li>{type}</li>
+        {/each}
+    </ul>
 </div>
 
 
@@ -33,6 +39,10 @@
     let selectedDevice = null;
     $: isBtnDisabled = selectedDevice === null;
 
+    const audioTypes = ["webm", "ogg", "mp3", "x-matroska"];
+    const codecs = ["should-not-be-supported", "vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"];
+    let supportedAudios: string[] = [];
+
     onMount(() => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             alert('Your browser does not support recording!');
@@ -44,8 +54,38 @@
                 devices = deviceList.filter((device) => device.kind === 'audioinput');
             })
         });
+
+        supportedAudios = getSupportedMimeTypes("audio", audioTypes, codecs);
+        console.log('-- All supported Audios : ', supportedAudios)
+
     })
 
+    function getSupportedMimeTypes(media, types, codecs) {
+        const isSupported = MediaRecorder.isTypeSupported;
+        const supported = [];
+        types.forEach((type) => {
+            const mimeType = `${media}/${type}`;
+            codecs.forEach((codec) => [
+                `${mimeType};codecs=${codec}`,
+                `${mimeType};codecs=${codec.toUpperCase()}`,
+                // /!\ false positive /!\
+                // `${mimeType};codecs:${codec}`,
+                // `${mimeType};codecs:${codec.toUpperCase()}`
+            ].forEach(variation => {
+                if (isSupported(variation))
+                    supported.push(variation);
+            }));
+            if (isSupported(mimeType))
+                supported.push(mimeType);
+        });
+        return supported;
+    }
+
+    declare global {
+        interface Window {
+            URL: unknown;
+        }
+    }
 
     function startRecord() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
