@@ -18,6 +18,7 @@
         <audio class="mt-1" controls src={audioURL}></audio>
     {/each}
 
+    <div class="mb-2 mt-4">Supported Codecs</div>
     <ul>
         {#each supportedAudios as type}
             <li>{type}</li>
