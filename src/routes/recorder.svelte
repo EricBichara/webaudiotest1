@@ -5,7 +5,7 @@
         <select class="select select-accent" bind:value={selectedDevice}>
             <option value={null} disabled selected>Please choose an option</option>
             {#each devices as device}
-                <option value={device.deviceId}>{device.label}</option>
+                <option value={device.deviceId}>{device.kind} - {device.label}</option>
             {/each}
         </select>
     {/if}
@@ -64,7 +64,7 @@
 
         navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(() => {
             navigator.mediaDevices.enumerateDevices().then(function (deviceList) {
-                devices = deviceList.filter((device) => device.kind === 'audioinput');
+                devices = deviceList;
             })
         });
 
