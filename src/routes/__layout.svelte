@@ -19,7 +19,7 @@
             </svg>
         </label>
     </div>
-    <div class="flex-1 px-2 mx-2">BAPP - The band's gonna make it</div>
+    <a href="/" class="flex-1 px-2 mx-2">BAPP - The band's gonna make it</a>
 </div>
 
 <div class="drawer drawer-mobile">

@@ -19,6 +19,16 @@
         </select>
     {/if}
 
+    <div class="mt-4">Blob Type</div>
+
+    <select class="select select-accent" bind:value={selectedBlobType}>
+        <option value={null} disabled selected>Please choose an option</option>
+        {#each blogTypes as type}
+            <option value={type}>{type}</option>
+        {/each}
+    </select>
+<p></p>
+
     <button class="btn btn-error mt-4" on:click={startRecord} disabled={isBtnDisabled}>{text}</button>
 
     {#each audioURLList as audioURL, i}
@@ -41,10 +51,10 @@
     let selectedDevice = null;
     $: isBtnDisabled = selectedDevice === null;
 
-    const audioTypes = ["webm", "ogg", "mp3", 'mp4', "x-matroska"];
-    const codecs = ["should-not-be-supported", "vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", 'flac', "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"];
     let supportedAudios: string[] = [];
     let selectedCodec = null;
+    const blogTypes: string[] = ['audio/webm', 'audio/mp4'];
+    let selectedBlobType: string = null;
 
     onMount(() => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -58,29 +68,31 @@
             })
         });
 
-        supportedAudios = getSupportedMimeTypes("audio", audioTypes, codecs);
-        console.log('-- All supported Audios : ', supportedAudios)
-
+        supportedAudios = getSupportedMimeTypes();
     })
 
-    function getSupportedMimeTypes(media, types, codecs) {
+    function getSupportedMimeTypes() {
+        const types = ["webm", "ogg", "mp3", 'mp4', "x-matroska"];
+        const codecs = ["should-not-be-supported", "vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", 'flac', "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"];
+
         const isSupported = MediaRecorder.isTypeSupported;
         const supported = [];
         types.forEach((type) => {
-            const mimeType = `${media}/${type}`;
+            const mimeType = `audio/${type}`;
             codecs.forEach((codec) => [
                 `${mimeType};codecs=${codec}`,
                 `${mimeType};codecs=${codec.toUpperCase()}`,
                 `${mimeType};codecs:${codec}`,
                 `${mimeType};codecs:${codec.toUpperCase()}`
             ].forEach(variation => {
-                console.log(variation);
                 if (isSupported(variation))
                     supported.push(variation);
             }));
 
-            if (isSupported(mimeType))
+            if (isSupported(mimeType)) {
                 supported.push(mimeType);
+            }
+
         });
         return supported;
     }
@@ -106,7 +118,7 @@
                 .then((stream) => {
                     mediaRecorder = new MediaRecorder(stream, {
                         audioBitsPerSecond: 48000,
-                        mimeType: 'audio/webm;codecs=opus'
+                        mimeType: selectedCodec
                     });
                     mediaRecorder.start();
                     mediaRecorder.ondataavailable = mediaRecorderDataAvailable;
@@ -127,7 +139,7 @@
     }
 
     function mediaRecorderStop() {
-        audioBlob = new Blob(chunks, {type: 'audio/webm'});
+        audioBlob = new Blob(chunks, {type: selectedBlobType});
         let audioURL = URL.createObjectURL(audioBlob);
         audioURLList = [...audioURLList, audioURL];
         // reset to default
