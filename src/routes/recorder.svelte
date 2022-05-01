@@ -9,21 +9,22 @@
             {/each}
         </select>
     {/if}
-    <div></div>
-    <button class="btn btn-error mt-4" on:click={startRecord} disabled={isBtnDisabled}>{text}</button>
+    <div class="mt-4">Supported Codecs</div>
+    {#if supportedAudios.length > 0}
+        <select class="select select-accent" bind:value={selectedCodec}>
+            <option value={null} disabled selected>Please choose an option</option>
+            {#each supportedAudios as codec}
+                <option value={codec}>{codec}</option>
+            {/each}
+        </select>
+    {/if}
 
+    <button class="btn btn-error mt-4" on:click={startRecord} disabled={isBtnDisabled}>{text}</button>
 
     {#each audioURLList as audioURL, i}
         <div class="mt-4">Recording {i + 1}</div>
         <audio class="mt-1" controls src={audioURL}></audio>
     {/each}
-
-    <div class="mb-2 mt-4">Supported Codecs</div>
-    <ul>
-        {#each supportedAudios as type}
-            <li>{type}</li>
-        {/each}
-    </ul>
 </div>
 
 
@@ -40,9 +41,10 @@
     let selectedDevice = null;
     $: isBtnDisabled = selectedDevice === null;
 
-    const audioTypes = ["webm", "ogg", "mp3", "x-matroska"];
-    const codecs = ["should-not-be-supported", "vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"];
+    const audioTypes = ["webm", "ogg", "mp3", 'mp4', "x-matroska"];
+    const codecs = ["should-not-be-supported", "vp9", "vp9.0", "vp8", "vp8.0", "avc1", "av1", 'flac', "h265", "h.265", "h264", "h.264", "opus", "pcm", "aac", "mpeg", "mp4a"];
     let supportedAudios: string[] = [];
+    let selectedCodec = null;
 
     onMount(() => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -69,23 +71,18 @@
             codecs.forEach((codec) => [
                 `${mimeType};codecs=${codec}`,
                 `${mimeType};codecs=${codec.toUpperCase()}`,
-                // /!\ false positive /!\
-                // `${mimeType};codecs:${codec}`,
-                // `${mimeType};codecs:${codec.toUpperCase()}`
+                `${mimeType};codecs:${codec}`,
+                `${mimeType};codecs:${codec.toUpperCase()}`
             ].forEach(variation => {
+                console.log(variation);
                 if (isSupported(variation))
                     supported.push(variation);
             }));
+
             if (isSupported(mimeType))
                 supported.push(mimeType);
         });
         return supported;
-    }
-
-    declare global {
-        interface Window {
-            URL: unknown;
-        }
     }
 
     function startRecord() {
@@ -102,7 +99,8 @@
                     autoGainControl: false,
                     channelCount: 2,
                     noiseSuppression: false,
-                    sampleRate: 48000
+                    sampleRate: 48000,
+                    suppressLocalAudioPlayback: false,
                 },
             })
                 .then((stream) => {
