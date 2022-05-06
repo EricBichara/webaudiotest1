@@ -1,4 +1,5 @@
 <div>
+    <div>Kick Parameters</div>
     <div>Attack {kick.envelope.attack}</div>
     <input type="range" min="0.0005" max="0.005" bind:value={kick.envelope.attack} step="0.0005" class="range">
     <div>Decay {kick.envelope.decay}</div>

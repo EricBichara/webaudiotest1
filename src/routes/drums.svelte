@@ -49,7 +49,6 @@
     }
 
     function playKick(time) {
-        console.log(kick.envelope.attack)
         kick.triggerAttackRelease("C1", "8n", time);
     }
 
@@ -118,7 +117,7 @@
             {#if currentParams === gridLabel[0]}
                 <KickParams kick={kick}/>
             {:else if currentParams === gridLabel[1]}
-                <SnareParams/>
+                <SnareParams snare={snare}/>
             {/if}
         </div>
     </div>
