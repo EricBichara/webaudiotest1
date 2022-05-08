@@ -64,7 +64,7 @@
 
         navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(() => {
             navigator.mediaDevices.enumerateDevices().then(function (deviceList) {
-                devices = deviceList;
+                devices = deviceList.filter((device) => device.kind === 'audioinput');
             })
         });
 
