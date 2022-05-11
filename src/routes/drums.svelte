@@ -19,15 +19,18 @@
     let currentParams;
 
     function start() {
-        kick = new Tone.MembraneSynth().toDestination();
-        snare = new Tone.MembraneSynth().toDestination();
-        highHat = new Tone.MembraneSynth().toDestination();
-        clap = new Tone.MembraneSynth().toDestination();
-
+        initSynths();
         loop = new Tone.Loop(triggerSounds, '4n');
         Tone.Transport.timeSignature = [8, 4];
         Tone.Transport.start();
         loop.start(0);
+    }
+
+    function initSynths() {
+        kick = new Tone.MembraneSynth().toDestination();
+        snare = new Tone.MembraneSynth().toDestination();
+        highHat = new Tone.MembraneSynth().toDestination();
+        clap = new Tone.MembraneSynth().toDestination();
     }
 
     function triggerSounds(time) {
@@ -76,6 +79,10 @@
     }
 
     function openParams(param) {
+        if (kick === undefined) {
+            initSynths();
+        }
+
         currentParams = param;
         isParamsOpen = true;
     }
@@ -100,7 +107,7 @@
                         <div class="flex flex-row items-center justify-end">
                             {#if ci === 0}
                                 <button on:click={()=>{openParams(gridLabel[ri])}}
-                                        class="mr-16 px-4 border-solid border-2 border-red-200 label-cell">{gridLabel[ri]}</button>
+                                        class="mr-6 px-4 border-solid border-2 border-red-200 label-cell">{gridLabel[ri]}</button>
                             {/if}
                             <div class="bg-error border-solid border-2 border-orange-600 h-14 rounded cell"
                                  class:bg-error={row} class:border-orange-200={ci === beat}
