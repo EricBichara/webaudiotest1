@@ -1,5 +1,6 @@
-<div>
-    <div>Kick Parameters</div>
+<div class="params">
+    <div class="text-2xl mb-4">Kick Parameters</div>
+
     <div>Attack {kick.envelope.attack.toFixed(4)}</div>
     <Knob bind:value={kick.envelope.attack} max="0.005" min="0.0005"></Knob>
 
@@ -11,7 +12,7 @@
 
     <div>Release {kick.envelope.release.toFixed(1)}</div>
     <Knob bind:value={kick.envelope.release} max="3" min="0.1"></Knob>
-
+    <p></p>
     <button class="btn btn-primary mt-4" on:click={test}>Test</button>
 </div>
 
@@ -25,3 +26,9 @@
         kick.triggerAttackRelease("C1", "8n");
     }
 </script>
+
+<style lang="scss">
+    .params{
+      user-select: none;
+    }
+</style>

@@ -52,6 +52,7 @@
     }
 
     function playKick(time) {
+        console.log('attack', kick.envelope.attack);
         kick.triggerAttackRelease("C1", "8n", time);
     }
 
