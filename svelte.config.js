@@ -4,12 +4,26 @@ import adapter from '@sveltejs/adapter-auto';
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+
+		vite: {
+			css: {
+				preprocessorOptions: {
+					scss: {
+						additionalData: '@use "src/variables.scss" as *;'
+					}
+				}
+			}
+		}
 	},
 
 	preprocess: [
 		preprocess({
-			postcss: true
+			postcss: true,
+
+			scss: {
+				prependData: '@use "src/variables.scss" as *;'
+			}
 		})
 	]
 };

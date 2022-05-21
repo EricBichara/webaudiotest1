@@ -6,7 +6,7 @@ const config = {
 	},
 
 	// add daisyUI plugin
-	plugins: [require("daisyui")],
+	plugins: [require("daisyui"),require('@tailwindcss/typography'),],
 
 	// daisyUI config (optional)
 	daisyui: {
