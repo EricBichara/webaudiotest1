@@ -122,7 +122,7 @@
 
     <div class="grid gap-4 grid-flow-col mt-4">
       {#each grid as column, ci}
-        <div class="grid gap-4 grid-flow-column ">
+        <div class="grid gap-4 grid-flow-row">
           {#each column as row, ri}
             <div class="flex flex-row items-center justify-end">
               {#if ci === 0}
