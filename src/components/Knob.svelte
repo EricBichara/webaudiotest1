@@ -80,7 +80,7 @@
 
 
 <style lang="scss">
-
+/*
   .knob2 {
     touch-action: none;
     display: block;
@@ -122,7 +122,7 @@
       content: "";
     }
   }
-
+*/
   $s: rgb(207, 201, 188);
   $s1: lighten($s, 13%);
   $s2: lighten($s, 2.5%);
