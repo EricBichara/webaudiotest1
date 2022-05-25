@@ -42,87 +42,87 @@
 </div>-->
 <!--<div class="dial" style="--rotation: {rotation}" on:pointerdown={pointerDown}></div>-->
 <div class="knob-inset">
-    <div class="knob" style="--rotation: {rotation}" on:pointerdown={pointerDown}></div>
+  <div class="knob" style="--rotation: {rotation}" on:pointerdown={pointerDown}></div>
 </div>
 
 
 <script lang="ts">
-    export let value, min, max;
-    export let rotRange = 2 * Math.PI * 0.83;
-    export let pixelRange = 70;
-    export let startRotation = -Math.PI * 0.83;
+  export let value, min, max;
+  export let rotRange = 2 * Math.PI * 0.83;
+  export let pixelRange = 70;
+  export let startRotation = -Math.PI * 0.83;
 
-    let startY, startValue;
-    $: valueRange = max - min;
-    $: rotation = startRotation + (value - min) / valueRange * rotRange;
+  let startY, startValue;
+  $: valueRange = max - min;
+  $: rotation = startRotation + (value - min) / valueRange * rotRange;
 
-    function clamp(num, min, max) {
-        return Math.max(min, Math.min(num, max));
-    }
+  function clamp(num, min, max) {
+    return Math.max(min, Math.min(num, max));
+  }
 
-    function pointerMove({clientY}) {
-        const valueDiff = valueRange * (clientY - startY) / pixelRange;
-        value = clamp(startValue - valueDiff, min, max)
-    }
+  function pointerMove({ clientY }) {
+    const valueDiff = valueRange * (clientY - startY) / pixelRange;
+    value = clamp(startValue - valueDiff, min, max);
+  }
 
-    function pointerDown({clientY}) {
-        startY = clientY;
-        startValue = value;
-        window.addEventListener('pointermove', pointerMove);
-        window.addEventListener('pointerup', pointerUp);
-    }
+  function pointerDown({ clientY }) {
+    startY = clientY;
+    startValue = value;
+    window.addEventListener("pointermove", pointerMove);
+    window.addEventListener("pointerup", pointerUp);
+  }
 
-    function pointerUp() {
-        window.removeEventListener('pointermove', pointerMove);
-        window.removeEventListener('pointerup', pointerUp);
-    }
+  function pointerUp() {
+    window.removeEventListener("pointermove", pointerMove);
+    window.removeEventListener("pointerup", pointerUp);
+  }
 </script>
 
 
 <style lang="scss">
-/*
-  .knob2 {
-    touch-action: none;
-    display: block;
-    width: 50px;
-    height: 50px;
-    padding: 0;
-    transform: rotate(calc(var(--rotation) * 1rad));
-    transform-origin: 50% 50%;
-  }
-
-  .dial {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    background-color: #6b6b6b;
-    border-radius: 50%;
-    transform: rotate(calc(var(--rotation) * 1rad));
-    //box-shadow: inset -2px 2px 0px 0px rgba(#fff, 0.1),
-    //inset 2px -2px 0px 0px rgba(#111, 0.2),
-    //-5px 5px 5px 0px #111,
-    //-10px 10px 10px -5px #111,
-    //-20px 20px 20px -10px #111,
-    //-25px 25px 25px -10px #111;
-
-    &::after {
-      position: absolute;
-      top: 0px;
-      left: calc(50% - 2px);
-      width: 4px;
-      height: 25%;
-      margin-top: -2px;
-      background-color: #fefefe;
-      border-radius: 2px;
-      transition: all 200ms ease-in-out;
-      transform: rotate(0deg);
-      transform-origin: -100% 50%;
-      box-shadow: 1px -1px 0px 0px rgba(#111, 0.2);
-      content: "";
+  /*
+    .knob2 {
+      touch-action: none;
+      display: block;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      transform: rotate(calc(var(--rotation) * 1rad));
+      transform-origin: 50% 50%;
     }
-  }
-*/
+
+    .dial {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      background-color: #6b6b6b;
+      border-radius: 50%;
+      transform: rotate(calc(var(--rotation) * 1rad));
+      //box-shadow: inset -2px 2px 0px 0px rgba(#fff, 0.1),
+      //inset 2px -2px 0px 0px rgba(#111, 0.2),
+      //-5px 5px 5px 0px #111,
+      //-10px 10px 10px -5px #111,
+      //-20px 20px 20px -10px #111,
+      //-25px 25px 25px -10px #111;
+
+      &::after {
+        position: absolute;
+        top: 0px;
+        left: calc(50% - 2px);
+        width: 4px;
+        height: 25%;
+        margin-top: -2px;
+        background-color: #fefefe;
+        border-radius: 2px;
+        transition: all 200ms ease-in-out;
+        transform: rotate(0deg);
+        transform-origin: -100% 50%;
+        box-shadow: 1px -1px 0px 0px rgba(#111, 0.2);
+        content: "";
+      }
+    }
+  */
   $s: rgb(207, 201, 188);
   $s1: lighten($s, 13%);
   $s2: lighten($s, 2.5%);
@@ -137,6 +137,7 @@
   }
 
   .knob {
+    touch-action: none;
     position: relative;
     width: 4em;
     height: 4em;
