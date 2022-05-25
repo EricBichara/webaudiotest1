@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as Tone from "tone";
-  import { Loop, MembraneSynth } from "tone";
+  import { Freeverb, Loop, MembraneSynth, NoiseSynth, Reverb } from "tone";
   import KickParams from "../components/KickParams.svelte";
   import SnareParams from "../components/SnareParams.svelte";
   import HighHatParams from "../components/HighHatParams.svelte";
@@ -21,13 +21,16 @@
   let bpm = 120;
   let beat = 0;
   let kick: MembraneSynth;
-  let snare: MembraneSynth;
-  let highHat: MembraneSynth;
-  let clap: MembraneSynth;
+  let snare: NoiseSynth;
+  let highHat: NoiseSynth;
+  let clap: NoiseSynth;
   let tom: MembraneSynth;
+  let reverb: Reverb;
+  let amount = 0;
 
   let isParamsOpen = false;
   let currentParams;
+  let isReverbOn = false;
 
   function start() {
     initSynths();
@@ -38,11 +41,34 @@
   }
 
   function initSynths() {
-    kick = new Tone.MembraneSynth().toDestination();
-    snare = new Tone.MembraneSynth().toDestination();
-    highHat = new Tone.MembraneSynth().toDestination();
-    clap = new Tone.MembraneSynth().toDestination();
-    tom = new Tone.MembraneSynth().toDestination();
+    reverb = new Tone.Reverb({
+      decay: 1,
+      wet: amount
+    }).toDestination();
+    kick = new Tone.MembraneSynth({
+      envelope: {
+        attack: 0.02,
+        decay: 0.8,
+        sustain: 0
+      }
+    }).toDestination();
+    snare = new Tone.NoiseSynth({
+      volume: -5,
+      envelope: {
+        attack: 0.001,
+        decay: 0.1,
+        sustain: 0
+      }
+    }).toDestination();
+    highHat = new Tone.NoiseSynth({
+      volume: -10,
+      envelope: {
+        attack: 0.01,
+        decay: 0.3
+      }
+    }).connect(reverb);
+    clap = new Tone.NoiseSynth().connect(reverb);
+    tom = new Tone.MembraneSynth().connect(reverb);
   }
 
   function triggerSounds(time) {
@@ -72,11 +98,11 @@
   }
 
   function playSnare(time) {
-    snare.triggerAttackRelease("C2", "8n", time);
+    snare.triggerAttack(time);
   }
 
   function playHighHat(time) {
-    highHat.triggerAttackRelease("C3", "8n", time);
+    highHat.triggerAttack(time);
   }
 
   function playClap(time) {
@@ -107,6 +133,20 @@
     isParamsOpen = true;
   }
 
+  function onReverbChanged(val) {
+    if (isReverbOn) {
+      snare.disconnect();
+      snare.connect(reverb);
+      kick.disconnect();
+      kick.connect(reverb);
+    } else {
+      snare.disconnect();
+      snare.toDestination();
+      kick.disconnect();
+      kick.toDestination();
+    }
+  }
+
 </script>
 
 <div class="drawer drawer-end">
@@ -117,10 +157,16 @@
     <div>BPM {bpm}</div>
     <input type="range" min="60" max="300" bind:value={bpm} step="1" class="range">
 
+    <div>Reverb</div>
+    <input type="checkbox" class="checkbox" bind:checked={isReverbOn} on:change={onReverbChanged}>
+    <div>Reverb Amount {amount}</div>
+    <input type="range" class="range" min="0" max="1" step="0.05" bind:value={amount} on:change={reverb.set({wet: amount})}>
+    <p></p>
+
     <button class="btn btn-primary" on:click={start}>Start</button>
     <button class="btn btn-primary" on:click={stop}>Stop</button>
 
-    <div class="grid gap-4 grid-flow-col mt-4">
+    <div class="grid gap-4 grid-flow-col mt-4 drum-grid">
       {#each grid as column, ci}
         <div class="grid gap-4 grid-flow-row">
           {#each column as row, ri}
@@ -159,6 +205,10 @@
 
 
 <style>
+    .drum-grid {
+        width: 600px;
+    }
+
     .cell {
         height: 40px;
         width: 40px;

@@ -145,7 +145,7 @@
     cursor: pointer;
     -webkit-backface-visibility: hidden;
     border-radius: 50%;
-    transition: 150ms ease-out;
+    transition: 50ms ease-out;
     transform: rotate(calc(var(--rotation) * 1rad));
     background: linear-gradient(90deg, $s2 10%, $s4 40.8%, $s 42%, $s 58%, $s1 59.2%, $s2 90%);
     box-shadow: 0 0.1em 0.2em 0 rgba($s1, .9) inset,

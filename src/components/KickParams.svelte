@@ -4,15 +4,15 @@
   <div class="grid grid-cols-2 gap-4">
     <div class="flex flex-col justify-items-center items-center">
       <div class="mb-1">Attack {kick.envelope.attack.toFixed(4)}</div>
-      <Knob bind:value={kick.envelope.attack} max="0.005" min="0.0005"></Knob>
+      <Knob bind:value={kick.envelope.attack} max="0.05" min="0.005"></Knob>
     </div>
     <div class="flex flex-col justify-items-center items-center">
       <div class="mb-1">Decay {kick.envelope.decay.toFixed(1)}</div>
-      <Knob bind:value={kick.envelope.decay} max="0.7" min="0.1"></Knob>
+      <Knob bind:value={kick.envelope.decay} max="1" min="0.1"></Knob>
     </div>
     <div class="flex flex-col justify-items-center items-center">
       <div class="mb-1">Sustain {kick.envelope.sustain.toFixed(3)}</div>
-      <Knob bind:value={kick.envelope.sustain} max="0.03" min="0.005"></Knob>
+      <Knob bind:value={kick.envelope.sustain} max="0.03" min="0"></Knob>
     </div>
     <div class="flex flex-col justify-items-center items-center">
       <div class="mb-1">Release {kick.envelope.release.toFixed(1)}</div>
