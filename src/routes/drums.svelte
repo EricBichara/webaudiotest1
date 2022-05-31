@@ -1,11 +1,13 @@
 <script lang="ts">
   import * as Tone from "tone";
-  import { Freeverb, Loop, MembraneSynth, NoiseSynth, Reverb } from "tone";
+  import { Loop, MembraneSynth, NoiseSynth, Reverb } from "tone";
   import KickParams from "../components/KickParams.svelte";
   import SnareParams from "../components/SnareParams.svelte";
   import HighHatParams from "../components/HighHatParams.svelte";
   import ClapParams from "../components/ClapParams.svelte";
   import TomParams from "../components/TomParams.svelte";
+  import configjson from "../gen.json";
+
 
   let grid = [[true, false, false, false, false],
     [true, false, false, false, false],
@@ -39,6 +41,7 @@
     Tone.Transport.timeSignature = [8, 4];
     Tone.Transport.start();
     loop.start(0);
+    console.log("my json", configjson);
   }
 
   function initSynths() {
@@ -161,7 +164,8 @@
     <div>Reverb</div>
     <input type="checkbox" class="checkbox" bind:checked={isReverbOn} on:change={onReverbChanged}>
     <div>Reverb Amount {amount}</div>
-    <input type="range" class="range" min="0" max="1" step="0.05" bind:value={amount} on:change={reverb.set({wet: amount})}>
+    <input type="range" class="range" min="0" max="1" step="0.05" bind:value={amount}
+           on:change={reverb.set({wet: amount})}>
     <p></p>
 
     <button class="btn btn-primary" on:click={start}>Start</button>
@@ -204,7 +208,8 @@
     </div>
   </div>
 
-  <div class="modal modal-bottom sm:modal-middle" class:modal-open={isModalOpen} on:click|self={()=>isModalOpen = false}>
+  <div class="modal modal-bottom sm:modal-middle" class:modal-open={isModalOpen}
+       on:click|self={()=>isModalOpen = false}>
     <div class="modal-box">
       <h3 class="font-bold text-lg">Congratulations random Interner user!</h3>
       <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
