@@ -31,6 +31,7 @@
   let isParamsOpen = false;
   let currentParams;
   let isReverbOn = false;
+  let isModalOpen = false;
 
   function start() {
     initSynths();
@@ -166,11 +167,7 @@
     <button class="btn btn-primary" on:click={start}>Start</button>
     <button class="btn btn-primary" on:click={stop}>Stop</button>
 
-    <!-- The button to open modal -->
-    <label for="my-modal-6" class="btn modal-button">open modal</label>
-
-    <!-- Put this part before </body> tag -->
-    <input type="checkbox" id="my-modal-6" class="modal-toggle" />
+    <button class="btn btn-accent" on:click={()=> isModalOpen = true}>Modal</button>
 
     <div class="grid gap-4 grid-flow-col mt-4 drum-grid">
       {#each grid as column, ci}
@@ -207,19 +204,17 @@
     </div>
   </div>
 
-  <div class="modal modal-bottom sm:modal-middle">
+  <div class="modal modal-bottom sm:modal-middle" class:modal-open={isModalOpen} on:click|self={()=>isModalOpen = false}>
     <div class="modal-box">
       <h3 class="font-bold text-lg">Congratulations random Interner user!</h3>
       <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
       <div class="modal-action">
-        <label for="my-modal-6" class="btn">Yay!</label>
+        <label class="btn" on:click={()=> isModalOpen = false}>Yay!</label>
       </div>
     </div>
   </div>
 
 </div>
-
-
 
 
 <style>

@@ -1,7 +1,7 @@
 <div>Snare Parameters</div>
 
 <script lang="ts">
-    import {MembraneSynth} from "tone";
+  import { NoiseSynth } from "tone";
 
-    export let snare: MembraneSynth;
+  export let snare: NoiseSynth;
 </script>
