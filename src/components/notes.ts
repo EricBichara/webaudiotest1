@@ -13,6 +13,11 @@ export enum Interval {
 	M7
 }
 
+export interface ScalesAndChords {
+	scales: { [k: string]: number[] };
+	chords: { [k: string]: number[] };
+}
+
 export const keys: string[] = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
 
 export class Notes {

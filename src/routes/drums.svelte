@@ -8,7 +8,6 @@
   import TomParams from "../components/TomParams.svelte";
   import configjson from "../gen.json";
 
-
   let grid = [[true, false, false, false, false],
     [true, false, false, false, false],
     [true, false, false, false, false],
@@ -34,6 +33,10 @@
   let currentParams;
   let isReverbOn = false;
   let isModalOpen = false;
+
+  let selectedKey;
+  let selectedChord;
+  let selectedInversion;
 
   function start() {
     initSynths();
@@ -210,9 +213,28 @@
 
   <div class="modal modal-bottom sm:modal-middle" class:modal-open={isModalOpen}
        on:click|self={()=>isModalOpen = false}>
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">Congratulations random Interner user!</h3>
-      <p class="py-4">You've been selected for a chance to get one year of subscription to use Wikipedia for free!</p>
+    <div class="modal-box grid grid-cols-3">
+      <div>
+        {#each Object.entries(configjson.scales) as [key, value]}
+          <div on:click={()=> selectedKey = key}>{key}</div>
+        {/each}
+      </div>
+      <div>
+        {#if selectedKey}
+          {#each configjson.scales[selectedKey] as interval}
+            <div>{interval}</div>
+          {/each}
+        {/if}
+      </div>
+      <div>
+        {#if selectedKey}
+          {#each Object.entries(configjson.chords) as [key, value]}
+            <div>{key}</div>
+          {/each}
+        {/if}
+      </div>
+
+
       <div class="modal-action">
         <label class="btn" on:click={()=> isModalOpen = false}>Yay!</label>
       </div>

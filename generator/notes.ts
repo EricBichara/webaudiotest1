@@ -16,54 +16,41 @@ export enum Interval {
 }
 
 export class Notes {
-	originalScales = new Map<string, Interval[]>([
-		['Ionian', [Interval.root, Interval.M2, Interval.M3, Interval.p4, Interval.p5, Interval.M6, Interval.M7]],
-		['Dorian', [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.p5, Interval.M6, Interval.m7]],
-		['Phrygian', [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.p5, Interval.m6, Interval.m7]],
-		['Lydian', [Interval.root, Interval.M2, Interval.M3, Interval.b5, Interval.p5, Interval.M6, Interval.M7]],
-		['Mixolydian', [Interval.root, Interval.M2, Interval.M3, Interval.p4, Interval.p5, Interval.M6, Interval.m7]],
-		['Aeolian', [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.p5, Interval.m6, Interval.m7]],
-		['Locrian', [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.b5, Interval.m6, Interval.m7]]
-	]);
-	originalChords = new Map<string, Interval[]>([
-		['dim', [Interval.root, Interval.m3, Interval.b5]],
-		['maj', [Interval.root, Interval.M3, Interval.p5]],
-		['min', [Interval.root, Interval.m3, Interval.p5]],
-		['aug', [Interval.root, Interval.M3, Interval.m6]]
-	]);
+	originalScales: { [k: string]: Interval[] } = {
+		Ionian: [Interval.root, Interval.M2, Interval.M3, Interval.p4, Interval.p5, Interval.M6, Interval.M7],
+		Dorian: [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.p5, Interval.M6, Interval.m7],
+		Phrygian: [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.p5, Interval.m6, Interval.m7],
+		Lydian: [Interval.root, Interval.M2, Interval.M3, Interval.b5, Interval.p5, Interval.M6, Interval.M7],
+		Mixolydian: [Interval.root, Interval.M2, Interval.M3, Interval.p4, Interval.p5, Interval.M6, Interval.m7],
+		Aeolian: [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.p5, Interval.m6, Interval.m7],
+		Locrian: [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.b5, Interval.m6, Interval.m7]
+	};
+
+	originalChords: { [k: string]: Interval[] } = {
+		dim: [Interval.root, Interval.m3, Interval.b5],
+		maj: [Interval.root, Interval.M3, Interval.p5],
+		min: [Interval.root, Interval.m3, Interval.p5],
+		aug: [Interval.root, Interval.M3, Interval.m6]
+	};
 
 	runConverter(): string {
-		const scales = new Map<string, number[]>();
-		const chords = new Map<string, number[]>();
+		const scales: { [k: string]: number[] } = {};
+		const chords: { [k: string]: number[] } = {};
 
-		this.originalScales.forEach((value, key) => {
-			scales.set(key, this.convertScale(value));
+		for (const [key, value] of Object.entries(this.originalScales)) {
+			scales[key] = this.convertScale(value);
+		}
+
+		for (const [key, value] of Object.entries(this.originalChords)) {
+			chords[key] = this.convertScale(value);
+		}
+
+		const str = JSON.stringify({
+			scales,
+			chords
 		});
-
-		this.originalChords.forEach((value, key) => {
-			chords.set(key, this.convertScale(value));
-		});
-
-		const str = JSON.stringify(
-			{
-				scales,
-				chords
-			},
-			this.replacer
-		);
 
 		return str;
-	}
-
-	replacer(key, value) {
-		if (value instanceof Map) {
-			return {
-				dataType: 'Map',
-				value: Array.from(value.entries()) // or with spread: value: [...value]
-			};
-		} else {
-			return value;
-		}
 	}
 
 	convertScale(notes: Interval[]): number[] {
