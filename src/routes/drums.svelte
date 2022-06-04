@@ -7,6 +7,7 @@
   import ClapParams from "../components/ClapParams.svelte";
   import TomParams from "../components/TomParams.svelte";
   import configjson from "../gen.json";
+  import { getScaleKeys, keys } from "../components/notes.js";
 
   let grid = [[true, false, false, false, false],
     [true, false, false, false, false],
@@ -35,8 +36,13 @@
   let isModalOpen = false;
 
   let selectedKey;
+  let selectedScale;
+
+  let selectedChordKey;
   let selectedChord;
-  let selectedInversion;
+
+  $: keysForScale = (selectedKey != null && selectedScale != null) ?  getScaleKeys(selectedKey, selectedScale): [];
+  $: chordsForKey = selectedChordKey != null ? [] : [];
 
   function start() {
     initSynths();
@@ -171,10 +177,26 @@
            on:change={reverb.set({wet: amount})}>
     <p></p>
 
+    <select class="select select-accent" bind:value={selectedKey}>
+      <option value={null} disabled selected>Please choose an option</option>
+      {#each keys as key}
+        <option value={key}>{key}</option>
+      {/each}
+    </select>
+
+    <select class="select select-accent" bind:value={selectedScale}>
+      <option value={null} disabled selected>Please choose an option</option>
+      {#each Object.entries(configjson.scales) as [key, value]}
+        <option value={value}>{key}</option>
+      {/each}
+    </select>
+
     <button class="btn btn-primary" on:click={start}>Start</button>
     <button class="btn btn-primary" on:click={stop}>Stop</button>
 
     <button class="btn btn-accent" on:click={()=> isModalOpen = true}>Modal</button>
+
+
 
     <div class="grid gap-4 grid-flow-col mt-4 drum-grid">
       {#each grid as column, ci}
@@ -215,23 +237,15 @@
        on:click|self={()=>isModalOpen = false}>
     <div class="modal-box grid grid-cols-3">
       <div>
-        {#each Object.entries(configjson.scales) as [key, value]}
-          <div on:click={()=> selectedKey = key}>{key}</div>
+        {#each keysForScale as key}
+          <div on:click={()=> selectedChordKey = key}>{key}</div>
         {/each}
       </div>
       <div>
-        {#if selectedKey}
-          {#each configjson.scales[selectedKey] as interval}
-            <div>{interval}</div>
-          {/each}
-        {/if}
+
       </div>
       <div>
-        {#if selectedKey}
-          {#each Object.entries(configjson.chords) as [key, value]}
-            <div>{key}</div>
-          {/each}
-        {/if}
+
       </div>
 
 
