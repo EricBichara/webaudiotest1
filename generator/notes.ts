@@ -30,7 +30,56 @@ export class Notes {
 		dim: [Interval.root, Interval.m3, Interval.b5],
 		maj: [Interval.root, Interval.M3, Interval.p5],
 		min: [Interval.root, Interval.m3, Interval.p5],
-		aug: [Interval.root, Interval.M3, Interval.m6]
+		aug: [Interval.root, Interval.M3, Interval.m6],
+		'maj b5': [Interval.root, Interval.M3, Interval.b5],
+		'maj 6': [Interval.root, Interval.M3, Interval.p5, Interval.M6],
+		'maj 6add9': [Interval.root, Interval.M3, Interval.p5, Interval.M6, Interval.M2],
+		'maj 7': [Interval.root, Interval.M3, Interval.p5, Interval.M7],
+		'maj 7b5': [Interval.root, Interval.M3, Interval.b5, Interval.M7],
+		'maj 7#5': [Interval.root, Interval.M3, Interval.m6, Interval.M7],
+		'maj 9': [Interval.root, Interval.M3, Interval.p5, Interval.M7, Interval.M2],
+		'maj add9': [Interval.root, Interval.M3, Interval.p5, Interval.M2],
+		'maj 11': [Interval.root, Interval.M3, Interval.p5, Interval.M7, Interval.p4],
+		'maj 13': [Interval.root, Interval.M3, Interval.p5, Interval.M7, Interval.M2, Interval.p4, Interval.M6],
+		'maj 7(#11)': [Interval.root, Interval.M3, Interval.p5, Interval.M7, Interval.b5],
+		'maj 6(11)': [Interval.root, Interval.M3, Interval.M6, Interval.p4],
+		//Minor
+		'min 6': [Interval.root, Interval.m3, Interval.p5, Interval.M6],
+		'min 6add9': [Interval.root, Interval.m3, Interval.p5, Interval.M6, Interval.M2],
+		'min 7': [Interval.root, Interval.m3, Interval.p5, Interval.m7],
+		'min 7b5': [Interval.root, Interval.m3, Interval.b5, Interval.m7],
+		'min 9': [Interval.root, Interval.m3, Interval.p5, Interval.m7, Interval.M2],
+		'min add9': [Interval.root, Interval.m3, Interval.p5, Interval.M2],
+		'min add9add11': [Interval.root, Interval.m3, Interval.p5, Interval.M2, Interval.p4],
+		'min add11': [Interval.root, Interval.m3, Interval.p5, Interval.p4],
+		'min 13': [Interval.root, Interval.m3, Interval.p5, Interval.m7, Interval.M2, Interval.p4, Interval.M6],
+		'min 11b9': [Interval.root, Interval.m3, Interval.p5, Interval.m7, Interval.m2, Interval.p4],
+
+		//Minor Major
+		'm/M 7': [Interval.root, Interval.m3, Interval.p5, Interval.M7],
+		'm/M 9': [Interval.root, Interval.m3, Interval.p5, Interval.M7, Interval.M2],
+		'm/M 11': [Interval.root, Interval.m3, Interval.p5, Interval.M7, Interval.M2, Interval.p4],
+		'm/M 13': [Interval.root, Interval.m3, Interval.p5, Interval.M7, Interval.M2, Interval.p4, Interval.M6],
+
+		//Dominant
+		'dom 7': [Interval.root, Interval.M3, Interval.p5, Interval.m7],
+		'dom #5': [Interval.root, Interval.M3, Interval.m6, Interval.m7],
+		'dom b5': [Interval.root, Interval.M3, Interval.b5, Interval.m7],
+		'dom 9': [Interval.root, Interval.M3, Interval.p5, Interval.m7, Interval.M2],
+		'dom 11': [Interval.root, Interval.M3, Interval.p5, Interval.m7, Interval.p4],
+
+		//Diminished
+		'dim 7': [Interval.root, Interval.m3, Interval.b5, Interval.M6],
+
+		//Other
+		'6': [Interval.root, Interval.M3, Interval.p5, Interval.M6],
+		'6 add9': [Interval.root, Interval.M3, Interval.p5, Interval.M6, Interval.M2],
+		'sus 2': [Interval.root, Interval.M2, Interval.p5],
+		'sus 4': [Interval.root, Interval.p4, Interval.p5],
+		'sus #4': [Interval.root, Interval.p4, Interval.b5],
+		'sus b5': [Interval.root, Interval.p4, Interval.b5],
+		'7 sus 4b9': [Interval.root, Interval.p4, Interval.m7, Interval.m2],
+		'13(no3)': [Interval.root, Interval.p5, Interval.m7, Interval.M6]
 	};
 
 	runConverter(): string {
