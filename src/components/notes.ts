@@ -152,7 +152,8 @@ export function findChords(scaleNotes: number[], chords: { [k: string]: number[]
 	const validChords: { [k: string]: number[] } = {};
 
 	Object.entries(chords).forEach(([key, value]) => {
-		const contains = scaleNotes.every((v) => value.includes(v));
+		//const contains = scaleNotes.every((v) => value.includes(v));
+		const contains = value.every((v) => scaleNotes.includes(v));
 		if (contains) {
 			validChords[key] = value;
 		}
@@ -161,7 +162,7 @@ export function findChords(scaleNotes: number[], chords: { [k: string]: number[]
 	return validChords;
 }
 
-export function getChordsForScale(scaleKey: string, scaleNotes: number[], chords: { [k: string]: number[] }): { [k: string]: number[] }[] {
+/*export function getChordsForScale(scaleKey: string, scaleNotes: number[], chords: { [k: string]: number[] }): { [k: string]: number[] }[] {
 	const chordsForScale: { [k: string]: number[] }[] = [];
 	const extendedScaleNotes: number[] = Object.assign([], scaleNotes);
 
@@ -177,6 +178,18 @@ export function getChordsForScale(scaleKey: string, scaleNotes: number[], chords
 	}
 
 	return chordsForScale;
+}*/
+
+export function getChordsForKey(keyIndex: number, scaleNotes: number[], chords: { [k: string]: number[] }): { [k: string]: number[] } {
+	const extendedScaleNotes: number[] = Object.assign([], scaleNotes);
+
+	scaleNotes.forEach((note) => {
+		extendedScaleNotes.push(note + 12);
+	});
+
+	const chordNotes: number[] = getChordIntervals(extendedScaleNotes.slice(keyIndex, keyIndex + 7));
+	const validChords: { [k: string]: number[] } = findChords(chordNotes, chords);
+	return validChords;
 }
 
 export function getScaleKeys(key: string, scaleNotes: number[]): string[] {

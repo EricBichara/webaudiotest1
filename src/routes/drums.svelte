@@ -7,7 +7,7 @@
   import ClapParams from "../components/ClapParams.svelte";
   import TomParams from "../components/TomParams.svelte";
   import configjson from "../gen.json";
-  import { getScaleKeys, keys } from "../components/notes.js";
+  import { getChordsForKey, getScaleKeys, keys } from "../components/notes.js";
 
   let grid = [[true, false, false, false, false],
     [true, false, false, false, false],
@@ -39,10 +39,16 @@
   let selectedScale;
 
   let selectedChordKey;
+  let selectedChordKeyIndex;
   let selectedChord;
 
   $: keysForScale = (selectedKey != null && selectedScale != null) ?  getScaleKeys(selectedKey, selectedScale): [];
-  $: chordsForKey = selectedChordKey != null ? [] : [];
+  $: chordsForKey = selectedChordKey != null ? getChordsForKey(selectedChordKeyIndex, selectedScale, configjson.chords) : [];
+
+  function selectChordKey(key, index){
+    selectedChordKey = key;
+    selectedChordKeyIndex = index;
+  }
 
   function start() {
     initSynths();
@@ -237,12 +243,14 @@
        on:click|self={()=>isModalOpen = false}>
     <div class="modal-box grid grid-cols-3">
       <div>
-        {#each keysForScale as key}
-          <div on:click={()=> selectedChordKey = key}>{key}</div>
+        {#each keysForScale as key, index}
+          <div on:click={()=> selectChordKey(key, index)} class:bg-error={selectedChordKey === key}>{key}</div>
         {/each}
       </div>
       <div>
-
+        {#each Object.entries(chordsForKey) as [key, value], index}
+          <div>{key}</div>
+        {/each}
       </div>
       <div>
 
