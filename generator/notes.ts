@@ -23,7 +23,23 @@ export class Notes {
 		Lydian: [Interval.root, Interval.M2, Interval.M3, Interval.b5, Interval.p5, Interval.M6, Interval.M7],
 		Mixolydian: [Interval.root, Interval.M2, Interval.M3, Interval.p4, Interval.p5, Interval.M6, Interval.m7],
 		Aeolian: [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.p5, Interval.m6, Interval.m7],
-		Locrian: [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.b5, Interval.m6, Interval.m7]
+		Locrian: [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.b5, Interval.m6, Interval.m7],
+		//Melodic Minor Modes W-H-W-W-W-W-H
+		'Melodic Minor': [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.p5, Interval.M6, Interval.M7],
+		'Dorian m2': [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.p5, Interval.M6, Interval.m7],
+		'Lydian Augmented': [Interval.root, Interval.M2, Interval.M3, Interval.b5, Interval.m6, Interval.M6, Interval.M7],
+		'Lydian Dominant': [Interval.root, Interval.M2, Interval.M3, Interval.b5, Interval.p5, Interval.M6, Interval.m7],
+		'Mixolydian m6': [Interval.root, Interval.M2, Interval.M3, Interval.p4, Interval.p5, Interval.m6, Interval.m7],
+		'Aeolian b5': [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.b5, Interval.m6, Interval.m7],
+		Altered: [Interval.root, Interval.m2, Interval.m3, Interval.M3, Interval.b5, Interval.m6, Interval.m7],
+		//Harmonic Minor Modes W-H-W-W-H-WH-H
+		'Harmonic Minor': [Interval.root, Interval.M2, Interval.m3, Interval.p4, Interval.p5, Interval.m6, Interval.M7],
+		'Locrian #6': [Interval.root, Interval.m2, Interval.m3, Interval.p4, Interval.b5, Interval.M6, Interval.m7],
+		'Ionian #5': [Interval.root, Interval.M2, Interval.M3, Interval.p4, Interval.m6, Interval.M6, Interval.M7],
+		'Dorian #4': [Interval.root, Interval.M2, Interval.m3, Interval.b5, Interval.p5, Interval.M6, Interval.m7],
+		'Phrygian Dominant': [Interval.root, Interval.m2, Interval.M3, Interval.p4, Interval.p5, Interval.m6, Interval.m7],
+		'Lydian #2': [Interval.root, Interval.m3, Interval.M3, Interval.b5, Interval.p5, Interval.M6, Interval.M7],
+		'Super Locrian': [Interval.root, Interval.m2, Interval.m3, Interval.M3, Interval.b5, Interval.m6, Interval.M6]
 	};
 
 	originalChords: { [k: string]: Interval[] } = {

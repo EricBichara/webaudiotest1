@@ -241,22 +241,23 @@
 
   <div class="modal modal-bottom sm:modal-middle" class:modal-open={isModalOpen}
        on:click|self={()=>isModalOpen = false}>
-    <div class="modal-box grid grid-cols-3">
-      <div>
-        {#each keysForScale as key, index}
-          <div on:click={()=> selectChordKey(key, index)} class:bg-error={selectedChordKey === key}>{key}</div>
-        {/each}
-      </div>
-      <div>
-        {#each Object.entries(chordsForKey) as [key, value], index}
-          <div>{key}</div>
-        {/each}
-      </div>
-      <div>
+    <div class="modal-box">
+      <div class="grid grid-cols-3 gap-3">
+        <div>
+          {#each keysForScale as key, index}
+            <div on:click={()=> selectChordKey(key, index)} class:bg-error={selectedChordKey === key}>{key}</div>
+          {/each}
+        </div>
+        <div>
+          {#each Object.entries(chordsForKey) as [key, value], index}
+            <div>{key}</div>
+          {/each}
+        </div>
+        <div>
+
+        </div>
 
       </div>
-
-
       <div class="modal-action">
         <label class="btn" on:click={()=> isModalOpen = false}>Yay!</label>
       </div>
