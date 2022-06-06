@@ -95,24 +95,27 @@
 
   function triggerSounds(time) {
     Tone.Transport.bpm.value = bpm;
-    console.log(Tone.Transport.position);
     const transport = Tone.Transport.position.split(":");
     const sixteenths = transport[2].split('.')[0];
-    beat = (parseInt(transport[1]) * 4) + parseInt(sixteenths);
+    const nextBeat = (parseInt(transport[1]) * 4) + parseInt(sixteenths);
 
-    if (grid[beat][0]) {
+    Tone.Draw.schedule(()=>{
+      beat = nextBeat;
+    }, time);
+
+    if (grid[nextBeat][0]) {
       playKick(time);
     }
-    if (grid[beat][1]) {
+    if (grid[nextBeat][1]) {
       playSnare(time);
     }
-    if (grid[beat][2]) {
+    if (grid[nextBeat][2]) {
       playHighHat(time);
     }
-    if (grid[beat][3]) {
+    if (grid[nextBeat][3]) {
       playClap(time);
     }
-    if (grid[beat][4]) {
+    if (grid[nextBeat][4]) {
       playTom(time);
     }
   }
