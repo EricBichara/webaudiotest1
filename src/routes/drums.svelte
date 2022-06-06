@@ -8,15 +8,9 @@
   import TomParams from "../components/TomParams.svelte";
   import configjson from "../gen.json";
   import { getChordsForKey, getScaleKeys, keys } from "../components/notes.js";
+  import { onMount } from "svelte";
 
-  let grid = [[true, false, false, false, false],
-    [true, false, false, false, false],
-    [true, false, false, false, false],
-    [true, false, false, false, false],
-    [true, false, false, false, false],
-    [true, false, false, false, false],
-    [true, false, false, false, false],
-    [true, false, false, false, false]];
+  let grid = [];
   let gridLabel = ["Kick", "Snare", "HighHat", "Clap", "Tom"];
 
   let loop: Loop;
@@ -45,6 +39,16 @@
   $: keysForScale = (selectedKey != null && selectedScale != null) ?  getScaleKeys(selectedKey, selectedScale): [];
   $: chordsForKey = selectedChordKey != null ? getChordsForKey(selectedChordKeyIndex, selectedScale, configjson.chords) : [];
 
+  onMount(()=>{
+    const newGrid = [];
+    for(let i = 0; i<32; i++){
+      newGrid.push([false, false, false, false]);
+    }
+
+    grid = newGrid;
+  });
+
+
   function selectChordKey(key, index){
     selectedChordKey = key;
     selectedChordKeyIndex = index;
@@ -52,11 +56,10 @@
 
   function start() {
     initSynths();
-    loop = new Tone.Loop(triggerSounds, "4n");
+    loop = new Tone.Loop(triggerSounds, "16n");
     Tone.Transport.timeSignature = [8, 4];
     Tone.Transport.start();
     loop.start(0);
-    console.log("my json", configjson);
   }
 
   function initSynths() {
@@ -92,7 +95,10 @@
 
   function triggerSounds(time) {
     Tone.Transport.bpm.value = bpm;
-    beat = parseInt(Tone.Transport.position.split(":")[1]);
+    console.log(Tone.Transport.position);
+    const transport = Tone.Transport.position.split(":");
+    const sixteenths = transport[2].split('.')[0];
+    beat = (parseInt(transport[1]) * 4) + parseInt(sixteenths);
 
     if (grid[beat][0]) {
       playKick(time);
@@ -204,9 +210,9 @@
 
 
 
-    <div class="grid gap-4 grid-flow-col mt-4 drum-grid">
+    <div class="grid gap-2 grid-flow-col mt-4 drum-grid">
       {#each grid as column, ci}
-        <div class="grid gap-4 grid-flow-row">
+        <div class="grid gap-2 grid-flow-row">
           {#each column as row, ri}
             <div class="flex flex-row items-center justify-end">
               {#if ci === 0}
@@ -215,6 +221,7 @@
               {/if}
               <div class="bg-error border-solid border-2 border-orange-600 h-14 rounded cell"
                    class:bg-error={row} class:border-orange-200={ci === beat}
+                   class:border-orange-100={ci%4 === 0}
                    on:click={()=>{togglePad(ci,ri)}}></div>
             </div>
           {/each}
@@ -274,7 +281,7 @@
 
     .cell {
         height: 40px;
-        width: 40px;
+        width: 20px;
     }
 
     .label-cell {
