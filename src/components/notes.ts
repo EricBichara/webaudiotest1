@@ -1,3 +1,6 @@
+import { debug } from 'svelte/internal';
+import { start } from 'tone';
+
 export const keys: string[] = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
 
 export function getChordFormula(chord: string, chords: { [k: string]: number[] }): string {
@@ -148,11 +151,22 @@ export function getChordIntervals(chordNotes: number[]): number[] {
 	return intervals;
 }
 
+export function getChord(chordKey: string, chordFormula: number[]): string[] {
+	const expandedKey: string[] = Object.assign([], keys);
+	expandedKey.push(...keys);
+	const startIndex = keys.indexOf(chordKey);
+	const chord = [chordKey + '4'];
+	for (let i = 1; i < chordFormula.length; i++) {
+		chord.push(expandedKey[startIndex + chordFormula[i] - 1] + '4');
+	}
+	console.log('cc', chord);
+	return chord;
+}
+
 export function findChords(scaleNotes: number[], chords: { [k: string]: number[] }): { [k: string]: number[] } {
 	const validChords: { [k: string]: number[] } = {};
 
 	Object.entries(chords).forEach(([key, value]) => {
-		//const contains = scaleNotes.every((v) => value.includes(v));
 		const contains = value.every((v) => scaleNotes.includes(v));
 		if (contains) {
 			validChords[key] = value;

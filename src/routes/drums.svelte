@@ -1,13 +1,13 @@
 <script lang="ts">
   import * as Tone from "tone";
-  import { Loop, MembraneSynth, NoiseSynth, Reverb } from "tone";
+  import { Loop, MembraneSynth, NoiseSynth, PolySynth, Reverb } from "tone";
   import KickParams from "../components/KickParams.svelte";
   import SnareParams from "../components/SnareParams.svelte";
   import HighHatParams from "../components/HighHatParams.svelte";
   import ClapParams from "../components/ClapParams.svelte";
   import TomParams from "../components/TomParams.svelte";
   import configjson from "../gen.json";
-  import { getChordsForKey, getScaleKeys, keys } from "../components/notes.js";
+  import { getChord, getChordsForKey, getScaleKeys, keys } from "../components/notes.js";
   import { onMount } from "svelte";
 
   let grid = [];
@@ -21,6 +21,7 @@
   let highHat: NoiseSynth;
   let clap: NoiseSynth;
   let tom: MembraneSynth;
+  let synth: PolySynth;
   let reverb: Reverb;
   let amount = 0;
 
@@ -35,13 +36,23 @@
   let selectedChordKey;
   let selectedChordKeyIndex;
   let selectedChord;
+  let selectedChordFormula;
 
-  $: keysForScale = (selectedKey != null && selectedScale != null) ?  getScaleKeys(selectedKey, selectedScale): [];
+  let firstChordName;
+  let firstChordKey;
+  let firstChordFormula;
+  let secondChord;
+  let thirdChord;
+  let fourthChord;
+  let chordIndex;
+
+  $: keysForScale = (selectedKey != null && selectedScale != null) ? getScaleKeys(selectedKey, selectedScale) : [];
   $: chordsForKey = selectedChordKey != null ? getChordsForKey(selectedChordKeyIndex, selectedScale, configjson.chords) : [];
+  $: firstChord = firstChordFormula != null ? getChord(firstChordKey, firstChordFormula) : ['C4'];
 
-  onMount(()=>{
+  onMount(() => {
     const newGrid = [];
-    for(let i = 0; i<32; i++){
+    for (let i = 0; i < 16; i++) {
       newGrid.push([false, false, false, false]);
     }
 
@@ -49,20 +60,21 @@
   });
 
 
-  function selectChordKey(key, index){
+  function selectChordKey(key, index) {
     selectedChordKey = key;
     selectedChordKeyIndex = index;
   }
 
   function start() {
     initSynths();
-    loop = new Tone.Loop(triggerSounds, "16n");
-    Tone.Transport.timeSignature = [8, 4];
+    loop = new Tone.Loop(triggerSounds, "8n");
+    Tone.Transport.timeSignature = [4, 4];
     Tone.Transport.start();
     loop.start(0);
   }
 
   function initSynths() {
+    synth = new Tone.PolySynth().toDestination();
     reverb = new Tone.Reverb({
       decay: 1,
       wet: amount
@@ -95,29 +107,42 @@
 
   function triggerSounds(time) {
     Tone.Transport.bpm.value = bpm;
-    const transport = Tone.Transport.position.split(":");
-    const sixteenths = transport[2].split('.')[0];
-    const nextBeat = (parseInt(transport[1]) * 4) + parseInt(sixteenths);
+    //const transport = Tone.Transport.position.split(":");
+    //const sixteenths = transport[2].split(".")[0];
+    //const nextBeat = (parseInt(transport[1]) * 4) + parseInt(sixteenths);
 
-    Tone.Draw.schedule(()=>{
-      beat = nextBeat;
-    }, time);
-
-    if (grid[nextBeat][0]) {
+    console.log("pos", Tone.Transport.position);
+    console.log("beat", beat);
+    if (grid[beat][0]) {
       playKick(time);
     }
-    if (grid[nextBeat][1]) {
+    if (grid[beat][1]) {
       playSnare(time);
     }
-    if (grid[nextBeat][2]) {
+    if (grid[beat][2]) {
       playHighHat(time);
     }
-    if (grid[nextBeat][3]) {
+    if (grid[beat][3]) {
       playClap(time);
     }
-    if (grid[nextBeat][4]) {
+    if (grid[beat][4]) {
       playTom(time);
     }
+
+    if(beat === 0){
+      synth.triggerAttackRelease(firstChord, '2n', time);
+    }
+
+    let nextBeat = beat;
+    if (beat === 15) {
+      nextBeat = 0;
+    } else {
+      nextBeat += 1;
+    }
+
+    Tone.Draw.schedule(() => {
+      beat = nextBeat;
+    }, time);
   }
 
   function playKick(time) {
@@ -175,6 +200,38 @@
     }
   }
 
+  function openModal(index: number) {
+    isModalOpen = true;
+    chordIndex = index;
+  }
+
+  function selectChord(){
+    switch(chordIndex){
+      case 0:
+        firstChordName = selectedChord;
+        firstChordKey = selectedChordKey;
+        firstChordFormula = selectedChordFormula;
+        break;
+      case 1:
+        secondChord = selectedChord;
+        break;
+      case 2:
+        thirdChord = selectedChord;
+        break;
+      case 3:
+        fourthChord = selectedChord;
+        break;
+    }
+    isModalOpen = false;
+    selectedChord = null;
+    selectedChordKey = null;
+  }
+
+  function onChordSelect(key, value){
+    selectedChord = key;
+    selectedChordFormula = value;
+  }
+
 </script>
 
 <div class="drawer drawer-end">
@@ -209,10 +266,6 @@
     <button class="btn btn-primary" on:click={start}>Start</button>
     <button class="btn btn-primary" on:click={stop}>Stop</button>
 
-    <button class="btn btn-accent" on:click={()=> isModalOpen = true}>Modal</button>
-
-
-
     <div class="grid gap-2 grid-flow-col mt-4 drum-grid">
       {#each grid as column, ci}
         <div class="grid gap-2 grid-flow-row">
@@ -231,7 +284,16 @@
         </div>
       {/each}
     </div>
+
+
+    <div class="grid grid-cols-4">
+      <div on:click={()=>openModal(0)}>{firstChordName != null ? firstChordKey + ' ' + firstChordName : 'Select'}</div>
+      <div>Stuff</div>
+      <div>Stuff</div>
+      <div>Stuff</div>
+    </div>
   </div>
+
   <div class="drawer-side">
     <label for="param-drawer" class="drawer-overlay"></label>
     <div class="menu p-4 w-80 bg-base-100">
@@ -260,7 +322,7 @@
         </div>
         <div>
           {#each Object.entries(chordsForKey) as [key, value], index}
-            <div>{key}</div>
+            <div on:click={()=> onChordSelect(key, value)} class:bg-error={selectedChord === key}>{key}</div>
           {/each}
         </div>
         <div>
@@ -269,7 +331,7 @@
 
       </div>
       <div class="modal-action">
-        <label class="btn" on:click={()=> isModalOpen = false}>Yay!</label>
+        <label class="btn" on:click={selectChord}>Yay!</label>
       </div>
     </div>
   </div>
