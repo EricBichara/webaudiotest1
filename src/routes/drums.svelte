@@ -41,14 +41,27 @@
   let firstChordName;
   let firstChordKey;
   let firstChordFormula;
-  let secondChord;
-  let thirdChord;
-  let fourthChord;
+
+  let secondChordName;
+  let secondChordKey;
+  let secondChordFormula;
+
+  let thirdChordName;
+  let thirdChordKey;
+  let thirdChordFormula;
+
+  let fourthChordName;
+  let fourthChordKey;
+  let fourthChordFormula;
+
   let chordIndex;
 
   $: keysForScale = (selectedKey != null && selectedScale != null) ? getScaleKeys(selectedKey, selectedScale) : [];
   $: chordsForKey = selectedChordKey != null ? getChordsForKey(selectedChordKeyIndex, selectedScale, configjson.chords) : [];
   $: firstChord = firstChordFormula != null ? getChord(firstChordKey, firstChordFormula) : ['C4'];
+  $: secondChord = secondChordFormula != null ? getChord(secondChordKey, secondChordFormula) : ['C4'];
+  $: thirdChord = thirdChordFormula != null ? getChord(thirdChordKey, thirdChordFormula) : ['C4'];
+  $: fourthChord = fourthChordFormula != null ? getChord(fourthChordKey, fourthChordFormula) : ['C4'];
 
   onMount(() => {
     const newGrid = [];
@@ -60,7 +73,7 @@
   });
 
 
-  function selectChordKey(key, index) {
+  function selectChordKey(key, index){
     selectedChordKey = key;
     selectedChordKeyIndex = index;
   }
@@ -131,6 +144,12 @@
 
     if(beat === 0){
       synth.triggerAttackRelease(firstChord, '2n', time);
+    } else if(beat === 4){
+      synth.triggerAttackRelease(secondChord, '2n', time);
+    } else if(beat === 8){
+      synth.triggerAttackRelease(thirdChord, '2n', time);
+    } else if(beat === 12){
+      synth.triggerAttackRelease(fourthChord, '2n', time);
     }
 
     let nextBeat = beat;
@@ -146,7 +165,6 @@
   }
 
   function playKick(time) {
-    console.log("attack", kick.envelope.attack);
     kick.triggerAttackRelease("C1", "8n", time);
   }
 
@@ -213,13 +231,19 @@
         firstChordFormula = selectedChordFormula;
         break;
       case 1:
-        secondChord = selectedChord;
+        secondChordName = selectedChord;
+        secondChordKey = selectedChordKey;
+        secondChordFormula = selectedChordFormula;
         break;
       case 2:
-        thirdChord = selectedChord;
+        thirdChordName = selectedChord;
+        thirdChordKey = selectedChordKey;
+        thirdChordFormula = selectedChordFormula;
         break;
       case 3:
-        fourthChord = selectedChord;
+        fourthChordName = selectedChord;
+        thirdChordKey = selectedChordKey;
+        thirdChordFormula = selectedChordFormula;
         break;
     }
     isModalOpen = false;
@@ -288,9 +312,9 @@
 
     <div class="grid grid-cols-4">
       <div on:click={()=>openModal(0)}>{firstChordName != null ? firstChordKey + ' ' + firstChordName : 'Select'}</div>
-      <div>Stuff</div>
-      <div>Stuff</div>
-      <div>Stuff</div>
+      <div on:click={()=>openModal(0)}>{secondChordName != null ? secondChordKey + ' ' + secondChordName : 'Select'}</div>
+      <div on:click={()=>openModal(0)}>{thirdChordName != null ? thirdChordKey + ' ' + thirdChordName : 'Select'}</div>
+      <div on:click={()=>openModal(0)}>{fourthChordName != null ? fourthChordKey + ' ' + fourthChordName : 'Select'}</div>
     </div>
   </div>
 
