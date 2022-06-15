@@ -15,7 +15,9 @@
 
   let loop: Loop;
   let bpm = 120;
-  let beat = 0;
+  let currentBeat = 0;
+  let nextBeat = 0;
+  let drawBeat = 0;
   let kick: MembraneSynth;
   let snare: NoiseSynth;
   let highHat: NoiseSynth;
@@ -62,6 +64,7 @@
   $: secondChord = secondChordFormula != null ? getChord(secondChordKey, secondChordFormula) : [];
   $: thirdChord = thirdChordFormula != null ? getChord(thirdChordKey, thirdChordFormula) : [];
   $: fourthChord = fourthChordFormula != null ? getChord(fourthChordKey, fourthChordFormula) : [];
+  $: enableChords = selectedKey && selectedScale;
 
   onMount(() => {
     const newGrid = [];
@@ -125,43 +128,48 @@
     //const nextBeat = (parseInt(transport[1]) * 4) + parseInt(sixteenths);
 
     console.log("pos", Tone.Transport.position);
-    console.log("beat", beat);
-    if (grid[beat][0]) {
+    currentBeat = nextBeat;
+    Tone.Draw.schedule(() => {
+      drawBeat = currentBeat;
+    }, time);
+
+    console.log("beat", currentBeat);
+    if (grid[currentBeat][0]) {
       playKick(time);
     }
-    if (grid[beat][1]) {
+    if (grid[currentBeat][1]) {
       playSnare(time);
     }
-    if (grid[beat][2]) {
+    if (grid[currentBeat][2]) {
       playHighHat(time);
     }
-    if (grid[beat][3]) {
+    if (grid[currentBeat][3]) {
       playClap(time);
     }
-    if (grid[beat][4]) {
-      playTom(time);
-    }
+    //if (grid[currentBeat][4]) {
+    //  playTom(time);
+    //}
 
-    if(beat === 0){
+    if(currentBeat === 0){
       synth.triggerAttackRelease(firstChord, '8n', time);
-    } else if(beat === 4){
+    } else if(currentBeat === 4){
       synth.triggerAttackRelease(secondChord, '8n', time);
-    } else if(beat === 8){
+    } else if(currentBeat === 8){
       synth.triggerAttackRelease(thirdChord, '8n', time);
-    } else if(beat === 12){
+    } else if(currentBeat === 12){
       synth.triggerAttackRelease(fourthChord, '8n', time);
     }
 
-    let nextBeat = beat;
-    if (beat === 15) {
+
+
+
+    if (currentBeat === 15) {
       nextBeat = 0;
     } else {
       nextBeat += 1;
     }
 
-    Tone.Draw.schedule(() => {
-      beat = nextBeat;
-    }, time);
+
   }
 
   function playKick(time) {
@@ -187,7 +195,9 @@
   function stop() {
     Tone.Transport.stop();
     loop.stop();
-    beat = 0;
+    currentBeat = 0;
+    nextBeat = 0;
+    drawBeat = 0;
   }
 
   function togglePad(column, row) {
@@ -204,7 +214,7 @@
     isParamsOpen = true;
   }
 
-  function onReverbChanged(val) {
+  function onReverbChanged() {
     if (isReverbOn) {
       snare.disconnect();
       snare.connect(reverb);
@@ -300,7 +310,7 @@
                         class="mr-6 px-4 border-solid border-2 border-red-200 label-cell">{gridLabel[ri]}</button>
               {/if}
               <div class="bg-error border-solid border-2 border-orange-600 h-14 rounded cell"
-                   class:bg-error={row} class:border-orange-200={ci === beat}
+                   class:bg-error={row} class:border-orange-200={ci === drawBeat}
                    class:border-orange-100={ci%4 === 0}
                    on:click={()=>{togglePad(ci,ri)}}></div>
             </div>
@@ -309,13 +319,14 @@
       {/each}
     </div>
 
-
+    {#if enableChords}
     <div class="grid grid-cols-4">
       <button class="btn" on:click={()=>openModal(0)}>{firstChordName != null ? firstChordKey + ' ' + firstChordName : 'Select'}</button>
       <button class="btn" on:click={()=>openModal(1)}>{secondChordName != null ? secondChordKey + ' ' + secondChordName : 'Select'}</button>
       <button class="btn" on:click={()=>openModal(2)}>{thirdChordName != null ? thirdChordKey + ' ' + thirdChordName : 'Select'}</button>
       <button class="btn" on:click={()=>openModal(3)}>{fourthChordName != null ? fourthChordKey + ' ' + fourthChordName : 'Select'}</button>
     </div>
+    {/if}
   </div>
 
   <div class="drawer-side">
